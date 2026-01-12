@@ -1,10 +1,26 @@
 const express = require('express');
+
 const app = express();
+
+function apiKeyMiddleware(req, res, next) {
+  const apiKey = req.headers['x-api-key'];
+
+  if (!apiKey) {
+    return res.status(401).json({ error: 'API key ausente' });
+  }
+
+  if (apiKey !== process.env.API_KEY) {
+    return res.status(403).json({ error: 'API key inválida' });
+  }
+
+  next();
+}
 
 const PORT = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {
-  res.send('API rodando');
+app.get('/cnpj/:cnpj', apiKeyMiddleware, (req, res) => {
+  const { cnpj } = req.params;
+  res.json({ cnpj, message: 'Consulta autorizada' });
 });
 
 app.listen(PORT, () => {
