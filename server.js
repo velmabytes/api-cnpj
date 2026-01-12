@@ -20,9 +20,11 @@ const PORT = process.env.PORT || 3000;
 
 app.get('/cnpj/:cnpj', apiKeyMiddleware, (req, res) => {
   const { cnpj } = req.params;
+  console.log('API_KEY:', process.env.API_KEY);
   res.json({ cnpj, message: 'Consulta autorizada' });
 });
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
+
