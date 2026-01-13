@@ -1,9 +1,11 @@
-module.exports = (req, res) => {
-  const { cnpj } = req.params;
+const { readSheet } = require('./sheets');
 
-  return res.json({
-    cnpj,
-    status: 'ok',
-    mensagem: 'Controller funcionando'
-  });
+module.exports = async (req, res) => {
+  try {
+    const rows = await readSheet();
+    res.json({ totalLinhas: rows.length, amostra: rows.slice(0, 2) });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao ler planilha' });
+  }
 };
